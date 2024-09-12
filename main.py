@@ -14,10 +14,11 @@ data = {
 df = pd.DataFrame(data)
 
 # Streamlit app UI
-st.title("Coal Auction Target Quantity Optimizer")
+# Custom font size for the title
+st.markdown("<h2 style='text-align: center; font-size: 24px;'>Coal Auction Target Quantity Optimizer</h2>", unsafe_allow_html=True)
 
-# Step 1: Inputs for total quantity and cost constraints
-st.header("Step 1: Enter Auction Parameters")
+# Step 1: Inputs for total quantity and cost constraints with reduced font size
+st.markdown("<h4 style='font-size: 18px;'>Step 1: Enter Auction Parameters</h4>", unsafe_allow_html=True)
 
 total_quantity = st.number_input(
     'Total quantity to be purchased (in tons):', min_value=1000, value=10000)
@@ -26,16 +27,17 @@ target_rs_per_gcv = st.number_input(
 desired_avg_landed_cost = st.number_input(
     'Desired average landed cost (maximum):', min_value=0.0, value=2700.0)
 
-# Step 2: Mine selection and adjustment
-st.header("Step 2: Select Mines and Adjust Costs")
+# Step 2: Mine selection and adjustment with reduced font size
+st.markdown("<h4 style='font-size: 18px;'>Step 2: Select Mines and Adjust Costs</h4>", unsafe_allow_html=True)
 
 selected_mines = st.multiselect(
     'Select Mines for distribution:', df['Mines Name'].tolist(), default=df['Mines Name'].tolist())
 
 filtered_df = df[df['Mines Name'].isin(selected_mines)].reset_index(drop=True)
 
-# Organize mine cost and GCV adjustment in two columns
-st.subheader('Adjust Landed Cost, Expected GCV, and view Rs per GCV:')
+# Step 2.1: Adjust Landed Cost, Expected GCV and view Rs per GCV with reduced font size
+st.markdown("<h4 style='font-size: 18px;'>Adjust Landed Cost, Expected GCV, and view Rs per GCV:</h4>", unsafe_allow_html=True)
+
 for idx, row in filtered_df.iterrows():
     st.write(f"**{row['Mines Name']}**")
     col1, col2, col3 = st.columns(3)
@@ -50,14 +52,14 @@ for idx, row in filtered_df.iterrows():
     filtered_df.at[idx, 'Landed Cost'] = new_landed_cost
     filtered_df.at[idx, 'Expected GCV for Auction'] = new_expected_gcv
 
-    # Calculate Rs per GCV for the mine
-    rs_per_gcv = new_landed_cost / new_expected_gcv
+    # Calculate Rs per GCV for the mine, rounded to 2 decimal places
+    rs_per_gcv = round(new_landed_cost / new_expected_gcv, 2)
 
     with col3:
-        st.write(f"Rs per GCV: ₹{rs_per_gcv:.5f}")
+        st.write(f"Rs per GCV: ₹{rs_per_gcv:.2f}")
 
-# Step 3: Optimization and results
-st.header("Step 3: Optimize Target Quantities")
+# Step 3: Optimization and results with reduced font size
+st.markdown("<h4 style='font-size: 18px;'>Step 3: Optimize Target Quantities</h4>", unsafe_allow_html=True)
 
 # Extract costs and GCV values
 costs = filtered_df['Landed Cost'].values
@@ -102,7 +104,7 @@ if result.success:
         st.write(f"{mine}: {quantity:.2f} tons")
 
     # Display the average landed cost and Rs per GCV after optimization
-    st.subheader(f"Optimized Wt.Average Landed Cost: ₹{avg_landed_cost:.2f} per ton (<= ₹{desired_avg_landed_cost})")
-    st.subheader(f"Optimized Wt.Rs/MCAL: ₹{avg_rs_per_gcv_after_opt:.5f} (<= ₹{target_rs_per_gcv})")
+    st.subheader(f"Optimized Average Landed Cost: ₹{avg_landed_cost:.2f} per ton (<= ₹{desired_avg_landed_cost})")
+    st.subheader(f"Optimized Rs per GCV: ₹{avg_rs_per_gcv_after_opt:.2f} (<= ₹{target_rs_per_gcv})")
 else:
     st.error("Optimization failed. Please try again with different inputs.")
