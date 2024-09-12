@@ -15,7 +15,7 @@ df = pd.DataFrame(data)
 
 # Streamlit app UI
 # Custom font size for the title
-st.markdown("<h2 style='text-align: center; font-size: 24px;'>Coal Auction Target Quantity Optimizer</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; font-size: 24px;'>Coal Auction Target Quantity Prediction Model</h2>", unsafe_allow_html=True)
 
 # Step 1: Inputs for total quantity and cost constraints with reduced font size
 st.markdown("<h4 style='font-size: 18px;'>Step 1: Enter Auction Parameters</h4>", unsafe_allow_html=True)
